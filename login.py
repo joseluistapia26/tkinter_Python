@@ -1,5 +1,5 @@
 from tkinter import *
-
+from tkinter import messagebox
 import tkinter as tk
 class LoginLv:
 
@@ -49,7 +49,42 @@ class LoginLv:
         self.usuario.insert(0, self.marca_user)
         self.usuario.bind("<FocusIn>", self.__clear_placeholder_user)
         self.usuario.bind("<FocusOut>", self.__add_placeholder_user)
+
+        # Password
+        lb3 = Label(self.login_frame,text="Password",
+                bg="white",font=("Roboto",9)).place(
+            x=input_x,y=155
+        )
+        self.password = Entry(self.login_frame,font=("Roboto",11),
+                        fg="#333333",bg="#E9ECEF", show="*",
+                              relief="flat", bd=5)
+        self.password.place(x=input_x,y=180,
+                        width=input_ancho,height=35)
+        #Botones
+        btn1 = Button(self.login_frame,relief="flat",
+                      text="Iniciar Sesión",bg="#3A5A9A",
+                      fg="white",font=("Roboto",12,"bold"),
+                      command=self.__validacion,
+                      cursor="hand2"
+                      )
+        btn1.place(x=input_x,y=250,width=input_ancho,height=40)
+
+        btn2 = Button(self.login_frame,relief="flat",
+                      text="Cancelar",fg="white",bg="#3A5A9A",font=("Roboto",12,"bold"),
+                      command=self.ven.destroy,
+                      cursor="hand2",bd=0
+                      )
+        btn2.place(relx=0.5,y=335,width=input_ancho,height=40,anchor="center")
+
         self.ven.mainloop()
+
+    def __validacion(self):
+        if self.usuario.get()=="Live14" and self.password.get()=="1234":
+            messagebox.showinfo("Inicio de Sesión",
+                                "Sesión correctamente Iniciada!")
+        else:
+            messagebox.showerror("Inicio de Sesión",
+                                 "Credenciales Inválidas!")
 
     def __add_placeholder_user(self, event):
         if not self.usuario.get():
