@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import messagebox
 import tkinter as tk
+from tkinter.ttk import Combobox
+
+
 class LoginLv:
 
     def __init__(self, titulo=None):
@@ -81,6 +84,7 @@ class LoginLv:
 
     def __validacion(self):
         if self.usuario.get()=="Live14" and self.password.get()=="1234":
+           self.ven.destroy()
            dash = Dashboard()
         else:
             messagebox.showerror("Inicio de Sesión",
@@ -108,9 +112,10 @@ class LoginLv:
 class Dashboard:
 
     def __init__(self,obj=None):
+        self.ruta="C:/Users/Usuario/PycharmProjects/TecLemas/img/Curso_Programacion.png"
         self.__getWindow("")
         self.__getMenu()
-        self.ven.mainloop()
+        self.__getImage(self.ruta,120,30,21)
 
     def __getMenu(self):
         self.menu = Menu(self.ven)
@@ -118,7 +123,7 @@ class Dashboard:
         #Cascada
         item1 = Menu(self.menu)
         self.menu.add_cascade(label="Archivo",menu=item1)
-        item1.add_command(label="Registro")
+        item1.add_command(label="Registro",command=self.__registro)
         item1.add_command(label="Gestion de usuarios")
         item1.add_separator()
         item1.add_command(label="Salir", command=self.ven.destroy)
@@ -134,13 +139,108 @@ class Dashboard:
         self.ven.geometry(f"{1000}x{570}")
         self.ven.resizable(0,0)
 
+    def __registro(self):
+        reg = Registro("Registro de Usuarios")
+
+
 
     def __about(self):
         messagebox.showinfo("About",
                             "Desarrollado en el Live 15 de Python",
                             parent=self.ven)
 
+    def __getImage(self,ruta,x,y,tam):
+        img = PhotoImage(file=ruta)
+        img = img.zoom(tam)
+        img = img.subsample(35)
+        panel = Label(self.ven,image=img).place(x=x,y=y)
+        self.ven.mainloop()
+
+class Registro:
+
+    def __init__(self,obj=None):
+        self.__getWindow()
+        self.__getLabels()
+        self.__getInputs()
+        self.__getButtons()
+        self.ven1.mainloop()
+    def __getWindow(self,obj=None):
+        self.ven1 = Toplevel()
+        self.ven1.title(obj)
+        self.ven1.config(bg="orange")
+        self.ven1.geometry(f"{700}x{490}")
+        self.ven1.resizable(0, 0)
+
+
+    def __getLabels(self):
+        posX=120
+        lb1 = Label(self.ven1,text="Registro de Usuarios",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=370,y=40,anchor="center")
+        lb2 = Label(self.ven1,text="Usuario",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=posX,y=100)
+        lb3 = Label(self.ven1,text="Password",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=posX,y=150)
+        lb4 = Label(self.ven1,text="Nombres",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=posX,y=200)
+        lb5 = Label(self.ven1,text="Apellido",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=posX,y=250)
+        lb6 = Label(self.ven1,text="Correo",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=posX,y=300)
+        lb7 = Label(self.ven1,text="Profesion",
+                    bg="orange",font=("Arial",18,"bold")).place(
+            x=posX,y=350)
+
+    def __getInputs(self):
+        posX = 380
+        self.usuario = Entry(self.ven1,font=("Arial",16),
+                             fg="#333333",bg="#E9ECEF",
+                             relief="flat",bd=5)
+        self.usuario.place(x=posX,y=100,width=200,height=25)
+        self.password = Entry(self.ven1,font=("Arial",18),
+                             fg="#333333",bg="#E9ECEF",
+                             relief="flat",bd=5,show="*")
+        self.password .place(x=posX,y=150,width=200,height=25)
+        self.nombres = Entry(self.ven1,font=("Arial",16),
+                             fg="#333333",bg="#E9ECEF",
+                             relief="flat",bd=5)
+        self.nombres.place(x=posX,y=200,width=200,height=25)
+        self.apellidos = Entry(self.ven1,font=("Arial",16),
+                             fg="#333333",bg="#E9ECEF",
+                             relief="flat",bd=5)
+        self.apellidos.place(x=posX,y=250,width=200,height=25)
+        self.correo = Entry(self.ven1,font=("Arial",16),
+                             fg="#333333",bg="#E9ECEF",
+                             relief="flat",bd=5)
+        self.correo.place(x=posX,y=300,width=200,height=25)
+        self.profesion = Combobox(self.ven1,state="readonly",
+                                values=["Estudiante","Docente",
+                                        "Programador","Otro"])
+        self.profesion.place(x=posX,y=350,width=200,height=25)
+
+    def __getButtons(self):
+        btn1= Button(self.ven1,relief="flat",
+                      text="Registrar",bg="#3A5A9A",
+                      fg="white",font=("Roboto",12,"bold"),
+                      #command=self.__registrar,
+                      cursor="hand2"
+                      ).place(x=200,y=420,width=110,height=40)
+        btn2= Button(self.ven1,relief="flat",
+                      text="Cancelar",bg="#3A5A9A",
+                      fg="white",font=("Roboto",12,"bold"),
+                      command=self.ven1.destroy,
+                      cursor="hand2"
+                      ).place(x=360,y=420,width=110,height=40)
+
 
 
 if __name__ == '__main__':
+    #form1 = Registro("Registro de Usuarios")
     ventana = LoginLv("Login Live")
+
+    #dash = Dashboard()
