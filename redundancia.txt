@@ -1,0 +1,91 @@
+CREATE DATABASE IF NOT EXISTS tienda_redundante;
+USE tienda_redundante;
+
+CREATE TABLE productos (
+  id_producto       INT AUTO_INCREMENT PRIMARY KEY,
+  categoria_nombre  VARCHAR(60) NOT NULL,  -- redundancia
+  nombre            VARCHAR(80) NOT NULL,
+  precio            DECIMAL(10,2) NOT NULL,
+  stock             INT NOT NULL,
+  estado           varchar(1) NOT NULL
+);
+INSERT INTO productos (categoria_nombre, nombre, precio, stock, activo) VALUES
+('Laptops',      'Lenovo ThinkPad E14', 899.99, 10, 'A'),
+('Laptops',      'HP ProBook 450',      799.50,  7, 'A'),
+('Periféricos',  'Mouse Logitech M185',  18.90, 50, 'A'),
+('Periféricos',  'Teclado Mecánico',     59.99, 20, 'A'),
+('Redes',        'Router TP-Link AX10',  69.00, 15, 'A');
+
+
+Solucion:
+CREATE DATABASE IF NOT EXISTS tienda_demo;
+USE tienda_demo;
+
+-- Tabla padre
+CREATE TABLE categorias (
+  id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+  nombre       VARCHAR(60) NOT NULL
+);
+
+-- Tabla hija
+CREATE TABLE productos (
+  id_producto  INT AUTO_INCREMENT PRIMARY KEY,
+  id_categoria INT NOT NULL,
+  nombre       VARCHAR(80) NOT NULL,
+  precio       DECIMAL(10,2) NOT NULL,
+  stock        INT NOT NULL,
+  activo       TINYINT(1) NOT NULL
+);
+
+-- Relación (clave foránea)
+ALTER TABLE productos
+  ADD FOREIGN KEY (id_categoria)
+  REFERENCES categorias(id_categoria);
+
+-- Inserts (orden correcto)
+INSERT INTO categorias (nombre) VALUES
+('Laptops'),
+('Periféricos'),
+('Redes');
+
+INSERT INTO productos (id_categoria, nombre, precio, stock, activo) VALUES
+(1, 'Lenovo ThinkPad E14', 899.99, 10, 1),
+(1, 'HP ProBook 450',      799.50,  7, 1),
+(2, 'Mouse Logitech M185',  18.90, 50, 1),
+(2, 'Teclado Mecánico',     59.99, 20, 1),
+(3, 'Router TP-Link AX10',  69.00, 15, 1);
+
+
+Modo redundante (qué es y por qué es problema)
+
+En un diseño redundante guardas el mismo dato repetido en varias filas/tablas. Ejemplo típico: en productos guardas categoria_nombre en texto (“Periféricos”) en vez de guardar solo id_categoria.
+
+Eso causa:
+
+Inconsistencia: si cambias “Periféricos” a “Accesorios” puedes actualizar algunas filas y otras no → quedan categorías mezcladas.
+
+Más mantenimiento: un cambio simple requiere muchos UPDATE.
+
+Errores por escritura: “Perifericos”, “Periféricos”, “Periféricos ” (espacio) terminan siendo “categorías distintas”.
+
+Más espacio y peor performance en búsquedas/ordenamientos por texto repetido.
+
+Solución (normalización con relación)
+
+Separar la entidad:
+
+categorias(id_categoria, nombre)
+
+productos(id_producto, id_categoria, ...)
+
+Y relacionarlas con FK (productos.id_categoria -> categorias.id_categoria).
+
+Beneficios:
+
+Una sola fuente de verdad: el nombre de la categoría se cambia una vez.
+
+Integridad: no puedes insertar un producto con una categoría inexistente.
+
+Datos limpios y consistentes: adiós duplicados por typos.
+
+Escala mejor: consultas y mantenimiento más simples.
