@@ -157,6 +157,28 @@ where p.id_marca= m.id_marca
 and   m.id_articulo= a.id_articulo
 and   a.id_categoria = c.id_categoria
 
+-- INNER JOIN
+
+select p.nombre as PRODUCTO, m.nombre as MARCA
+from productos p
+Inner join marcas m on p.id_marca= m.id_marca;
+
+-- LEFT JOIN
+
+select p.nombre as PRODUCTO, m.nombre as MARCA
+from productos p
+LEFT join marcas m on p.id_marca= m.id_marca;
+
+-- Consula todo palabras Joins
+select 
+p.id_producto,c.nombre AS CATEGORIA, a.nombre AS ARTICULO,
+  m.nombre AS MARCA, p.codigo, p.nombre AS PRODUCTO,
+  p.precio, p.stock
+from productos p
+Inner join marcas m on p.id_marca=m.id_marca
+left join articulos a on m.id_articulo= a.id_articulo
+left join categorias c on   a.id_categoria = c.id_categoria  ;
+
 
 
 
