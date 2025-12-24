@@ -147,6 +147,16 @@ p.codigo, p.precio,p.stock
  from marcas m, productos p
 where p.id_marca=m.id_marca;
 
+--  consulta Ejercicios con Joins 8:35pm
+select 
+p.id_producto,c.nombre AS CATEGORIA, a.nombre AS ARTICULO,
+  m.nombre AS MARCA, p.codigo, p.nombre AS PRODUCTO,
+  p.precio, p.stock
+from categorias c, articulos a, marcas m,productos p
+where p.id_marca= m.id_marca
+and   m.id_articulo= a.id_articulo
+and   a.id_categoria = c.id_categoria
+
 
 
 
