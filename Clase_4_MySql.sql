@@ -124,4 +124,94 @@ END ;;
 
 DELIMITER ;
 
+-- Calcula el IVA (15%) basado en un subtotal
+DELIMITER ;;
+CREATE FUNCTION `getIva`(subtotal double) RETURNS double
+    DETERMINISTIC
+BEGIN
+    RETURN (subtotal * 0.15);
+END ;;
+
+-- Evalúa un promedio y retorna un mensaje de estado (Aprobado/Reprobado/Inválido)
+DELIMITER ;;
+CREATE FUNCTION `getMessage`(promedio double) RETURNS text CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+    DECLARE msg text;
+    IF promedio >= 0 AND promedio < 7 THEN
+        SET msg = 'REPROBADO';
+    END IF;
+    IF promedio >= 7 AND promedio <= 10 THEN
+        SET msg = 'APROBADO';
+    END IF;
+    IF promedio < 0 OR promedio > 10 THEN
+        SET msg = 'INVALIDO!';
+    END IF;
+    RETURN msg;
+END ;;
+
+-- Calcula el subtotal multiplicando precio por cantidad
+DELIMITER ;;
+CREATE FUNCTION `getSubtotal`(precio double, cantidad int) RETURNS double
+    DETERMINISTIC
+BEGIN
+    RETURN (precio * cantidad);
+END ;;
+
+-- Suma el subtotal y el iva para obtener el total
+DELIMITER ;;
+CREATE FUNCTION `getTotal`(subtotal double, iva double) RETURNS double
+    DETERMINISTIC
+BEGIN
+    RETURN (subtotal + iva);
+END ;;
+
+-- Realiza una multiplicación simple entre dos valores
+DELIMITER ;;
+CREATE FUNCTION `multiplicacion`(v1 double, v2 double) RETURNS double
+    DETERMINISTIC
+BEGIN
+    DECLARE m double;
+    SET m = (v1 * v2);
+    RETURN m;
+END ;;
+
+-- Realiza una suma simple entre dos enteros
+DELIMITER ;;
+CREATE FUNCTION `operacion1`(x int, y int) RETURNS int
+    DETERMINISTIC
+BEGIN
+    DECLARE r int;
+    SET r = (x + y);
+    RETURN r;
+END ;;
+
+-- Calcula el promedio simple de tres notas
+DELIMITER ;;
+CREATE FUNCTION `promedio`(n1 double, n2 double, n3 double) RETURNS double
+    DETERMINISTIC
+BEGIN
+    RETURN (n1 + n2 + n3) / 3;
+END ;;
+
+DELIMITER ;;
+CREATE PROCEDURE `factura`(
+    IN cliente varchar(50),
+    IN producto varchar(60),
+    IN precio double,
+    IN cantidad int,
+    OUT subtotal double,
+    OUT iva double,
+    OUT total double
+)
+BEGIN
+    SET subtotal = (SELECT getSubtotal(precio, cantidad));
+    SET iva = (SELECT getIva(subtotal));
+    SET total = (SELECT getTotal(subtotal, iva));
+END ;;
+
+-- Determina el mensaje de aprobación mediante parámetros de salida
+DELIMITER ;;
+
+
 
