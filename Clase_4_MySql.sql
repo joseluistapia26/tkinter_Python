@@ -213,5 +213,46 @@ END ;;
 -- Determina el mensaje de aprobación mediante parámetros de salida
 DELIMITER ;;
 
+CREATE DEFINER=`remoto`@`%` PROCEDURE `registroVenta`(
+                           in cliente varchar(60),
+                           in producto varchar(60),
+                           in precio double,
+                           in cantidad int,
+                           out subtotal double,
+                           out iva double,
+                           out total double,
+                           out msg text
+)
+BEGIN
+     set subtotal = (select getSubtotal(precio,cantidad));
+     set iva = (select getIva(subtotal));
+     set total = (select getTotal(subtotal,iva));
+     if total>0 then
+          insert into ventas2(producto,precio,cantidad,total)
+          values (producto,precio,cantidad, total);
+	      set msg ='Registro de venta exitoso!';
+     else
+          set msg = 'Error de venta, el total no debe ser igual a 0';
+     end if;
+END
+CREATE DEFINER=`remoto`@`%` PROCEDURE `listaVentas`()
+BEGIN
+     select * from ventas2;
+END
+
+-- IMPLEMENTACION
+set @subtotal = 0;
+set @iva = 0;
+set @total = 0;
+set @msg = '0';
+call lives_mysql.registroVenta('JAVIER', 'PENDRIVE', 15, 5, @subtotal, @iva, @total, @msg);
+select @subtotal as Subtotal, @iva as Iva, @total as Total, @msg as Estado;
+
+select * from ventas2;
+
+call listaVentas();
+
+
+
 
 
