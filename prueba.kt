@@ -38,3 +38,34 @@ fun ejemplo4(){
     println("Nombre: $nombre\nEdad: $edad\nSueldo: $sueldo")
 }
 
+fun ejemplo5(){
+    var cliente : String
+    var producto : String
+    var precio : Double
+    var cantidad : Int
+    var subtotal: Double
+    var iva : Double
+    var total : Double
+    print("Ingresa el nombre del cliente: ")
+    cliente = readLine() ?: ""
+    print("Ingresa el nombre del producto: ")
+    producto = readLine() ?: ""
+    print("Ingresa el precio del producto: ")
+    precio = readLine()?.toDoubleOrNull() ?: 0.0
+    print("Ingresa la cantidad a comprar: ")
+    cantidad = readLine()?.toIntOrNull() ?: 0
+    subtotal = precio * cantidad
+    iva = subtotal * 0.12
+    total = subtotal + iva
+    println("\n--- FACTURA ---")
+    println("Cliente: $cliente")
+    println("Producto: $producto")
+    println("Precio unitario: $precio")
+    println("Cantidad: $cantidad")
+    println("Subtotal: $subtotal")
+    println("IVA (12%): $iva")
+    println("Total a pagar: $total")
+}
+
+
+
